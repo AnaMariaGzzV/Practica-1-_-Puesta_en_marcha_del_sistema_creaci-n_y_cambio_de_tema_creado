@@ -141,10 +141,8 @@ $fecha=date("Y-m-d");
     <!-- Modal de Foto -->
     <!-- Modal de PDF -->
         <?php include'../modales/modalPDF.php'; ?>
-    <!-- Modal de PDF -->
-    <!-- Modal de cambio de contraseña -->
-        <?php include'modalContra.php'; ?>
-    <!-- Modal de PDF -->
+    <!-- Modal Cambiar Contraseña -->
+    <?php include'modalContra.php'; ?>
 
     <!-- jQuery -->
     <script src="../plugins/jQuery/jquery-3.3.1.js"></script>   

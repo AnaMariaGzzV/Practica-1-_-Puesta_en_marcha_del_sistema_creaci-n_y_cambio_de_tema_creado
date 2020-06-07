@@ -68,50 +68,6 @@ function verUsuarios(){
     ocultarSecciones();
 }
 
-function abrirModalContra(){
-    $("#modalContra").modal();
-}
-
-function validarContraseña(){
-        var contraseña = document.getElementById("nuevaContra1").value;
-        var confircontra = document.getElementById("nuevaContra2").value;
-        if (contraseña.length > 7 && confircontra.length > 7 && contraseña==confircontra) {
-            console.log("La Contraseña es Mayor a 7 Digitos");
-            $("#btnactualiza").removeAttr("disabled");
-            return true;
-        } else {
-            console.log("La Contraseña es Menor a 8 Digitos");
-            $("#btnactualiza").attr("disabled","disabled");
-            return false;
-        }
-    }
-    $("#nuevaContra1").keyup(function(){
-        validarContraseña()
-    });
-    $("#nuevaContra2").keyup(function(){
-        validarContraseña()
-    });
-
-// console.log("Hola");
-$("#btnactualiza").on("click",function (){
-    var contra     = $("#nuevaContra1").val();
-    var id=idUsuario;
-    $.ajax({
-        url:"../mInicio/actualizar.php",
-        type:"POST",
-        dateType:"html",
-        data:{id,contra},
-        success:function(respuesta){
-            console.log(respuesta);
-            swal("La Contraseña se Actualizo Exitosamente!");
-            $("#modalContra").modal('hide');
-            $("#contentSistema").show();
-            },
-            error:function(xhr,status){
-                alert("Error al Actualizar Contraseña"); 
-            },
-    });
-});
 
 
 function abrirModalPDF(id,ruta,modulo) {
@@ -503,3 +459,57 @@ $('#scroll').click(function(){
     $("html, body").animate({ scrollTop: 0 }, 600); 
     return false; 
 });
+//ABRIR EL MODAL DE CAMBIAR CONTRASEÑA
+function abrirModalContra() {
+    $("#modalContra").modal();
+    
+}
+
+//validacion de contraseña
+function validarContra() {
+    var contra = document.getElementById("newContra1").value;
+    var confcontra = document.getElementById("newContra2").value;
+    if (contra.length > 7 && confcontra.length > 7 && contra==confcontra) {
+        console.log("mayor a 7 digitos");
+        $("#actualizarContra").removeAttr("disabled");
+        return true;
+    } else {
+        console.log("menor a 8 digitos");
+        $("#actualizarContra").attr("disabled","disabled");
+        return false;
+    }
+
+}
+//validacion   
+$("#newContra1").keyup(function(){
+    validarpass()
+    
+});
+
+//Validacion ya tenia
+$("#newContra2").keyup(function(){
+    validarpass()
+});
+
+$("actualizarContra").on("click",function(){
+   var contra       = $("#newContra1").val();
+   var id=idUsuario;
+$.ajax({
+    url:"../mInicio/actualizar.php",
+    type:"POST",
+    dateType:"html",
+    data:{id,contra},
+    success:function(respuesta){
+        console.log(respuesta);
+        swal("Contraseña Actualizada");
+        $("#modalContra").modal('hide');
+        $("#contentSistema").show();
+    },
+    error:function(xhr,status){
+        alert("Error al actualizar Contraseña");
+    },
+});
+});
+
+
+
