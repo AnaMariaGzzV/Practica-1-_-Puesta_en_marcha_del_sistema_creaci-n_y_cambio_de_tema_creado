@@ -1,26 +1,20 @@
 <?php
 // Conexion mysqli
 include'../conexion/conexionli.php';
+$fecha=date("Y-m-d");
 
-include'../funciones/calcularEdad.php';
 //Variable de Nombre
-$varGral="-DP";
+$varGral="-CT";
 
 $cadena = "SELECT
-                id_datos,
-                activo,
-                nombre,
-                ap_paterno,
-                ap_materno,
-                fecha_nac,
-                correo,
-                curp,
-                clave,
-                domicilio,
-                sexo,
-                id_ecivil
+        id_tema,
+        activo,
+        nombre_tema,
+        fecha_registro,
+        hora_registro,
+        TIMESTAMPDIFF(DAY,DATE_FORMAT(fecha_registro,'%Y-%m-%d'),'$fecha')
             FROM
-                datos ORDER BY id_datos DESC";
+                temas ORDER BY id_tema DESC";
 $consultar = mysqli_query($conexionLi, $cadena);
 //$row = mysqli_fetch_array($consultar);
 
@@ -32,16 +26,11 @@ $consultar = mysqli_query($conexionLi, $cadena);
             <tr class='hTabla'>
                 <th scope="col">#</th>
                 <th scope="col">Editar</th>
-                <th scope="col">Imprimir</th>
-                <th scope="col">Datos</th>
-                <th scope="col">Foto</th>
-                <th scope="col">Audio</th>
-                <th scope="col">Horario</th>
-                <th scope="col">Clave</th>
+                <th scope="col">Exportar Tema</th>
+                <th scope="col">Aplicar Tema</th>
                 <th scope="col">Nombre</th>
-                <th scope="col">Ap. Paterno</th>
-                <th scope="col">Ap. Materno</th>
-                <th scope="col">Edad</th>
+                <th scope="col">Dias Creacion</th>
+                <th scope="col">Hora Creacion</th>
                 <th scope="col">Status</th>
             </tr>
         </thead>
@@ -54,77 +43,20 @@ $consultar = mysqli_query($conexionLi, $cadena);
 
             $id          = $row[0];
 
-            $cadenahorario = "SELECT id_datos_persona, id_horario, turno, l_entrada, l_salida, m_entrada, m_salida, mi_entrada, mi_salida, j_entrada, j_salida, v_entrada, v_salida, s_entrada, s_salida, d_entrada, d_salida FROM horarios WHERE id_datos_persona = '$id'";
-
-            $consultarhorario = mysqli_query($conexionLi, $cadenahorario);
-
-            $row2 = mysqli_fetch_array($consultarhorario);
-
-            $turno = $row2[2];
-            $LuE = $row2[3];
-            $LuS = $row2[4];
-            $MaE = $row2[5];
-            $MaS = $row2[6];
-            $MiE = $row2[7];
-            $MiS = $row2[8];
-            $JuE = $row2[9];
-            $JuS = $row2[10];
-            $ViE = $row2[11];
-            $ViS = $row2[12];
-            $SaE = $row2[13];
-            $SaS = $row2[14];
-            $DoE = $row2[15];
-            $DoS = $row2[16];
-
-            if ($id == $row2[0]) {
-                 
-                $icoHorario="<i class='fas fa-check '></i>";
-                $vHorario="Si";
-                
-            }else{
-                 
-                $icoHorario="<i class='fas fa-times fa-lg'></i>";
-                $vHorario="No";
-                
-            }
-
             if ($row[1] == 1) {
                 $chkChecado    = "checked";
                 $dtnDesabilita = "";
                 $chkValor      = "1";
-                $iconSound="fa fa-volume-up fa-lg";
             }else{
                 $chkChecado    = "";
                 $dtnDesabilita = "disabled";
                 $chkValor      = "0";
-                $iconSound="fa fa-volume-mute fa-lg";
             }
 
             $nombre     = $row[2];
-            $paterno    = $row[3];
-            $materno    = $row[4];
-            $fNac       = $row[5];
-            $nacimiento = date("d-m-Y", strtotime($row[5]));
-            $edad       = CalculaEdad($fNac);
-            $correo     = $row[6];
-            $curp       = $row[7];
-            $clave      = $row[8];
-            $domicilio  = $row[9];
-            $sexo       = $row[10];
-            $ecivil     = $row[11];
-            $nCompleto  = $row[2].' '.$row[3].' '.$row[4];
-            
-            $sonido     ="El nombre completo de la persona es ".$nombre." ".$paterno." ".$materno." , registrado con la clave ".$clave;
-
-            $foto       = '../fotos/'.$clave.'.jpg';
-            if (file_exists($foto)){
-                $icoFoto="<i class='fas fa-check '></i>";
-                $tFoto="Si";
-            }else{
-                $icoFoto="<i class='fas fa-times fa-lg'></i>";
-                $tFoto="No";
-            }
-
+            $dias       = $row[5];
+            $hora       = $row[4];
+        
 
             ?>
             <tr class="centrar">
@@ -132,61 +64,38 @@ $consultar = mysqli_query($conexionLi, $cadena);
                     <?php echo $n?>
                 </th>
                 <td>
-                    <button <?php echo $dtnDesabilita?> type="button" class="editar btn btn-outline-success btn-sm activo" id="btnEditar<?php echo $varGral?><?php echo $n?>" onclick="llenar_formulario_DP('<?php echo $id?>','<?php echo $nombre?>','<?php echo $paterno?>','<?php echo $materno?>','<?php echo $fNac?>','<?php echo $edad?>','<?php echo $correo?>','<?php echo $curp?>','<?php echo $clave?>','<?php echo $domicilio?>','<?php echo $sexo?>','<?php echo $ecivil?>')">
+                    <button <?php echo $dtnDesabilita?> type="button" class="editar btn btn-outline-success btn-sm activo" id="btnEditar<?php echo $varGral?><?php echo $n?>" onclick="llenar_formulario_CT('<?php echo $id?>','<?php echo $nombre?>')">
                                 <i class="far fa-edit fa-lg"></i>
                     </button>
+                </td>
                 <td>
-                    <button <?php echo $dtnDesabilita?> type="button" class="imprimir btn btn-outline-warning btn-sm activo" id="btnImprimir<?php echo $varGral?><?php echo $n?>" onclick="abrirModalPDF('<?php echo $id?>','../mDatosPersonales','Datos Personales')">
-                                <i class="fas fa-print fa-lg"></i>
+                    <button <?php echo $dtnDesabilita?> type="button" class="exportar btn btn-outline-warning btn-sm activo" id="btnExportar<?php echo $varGral?><?php echo $n?>" onclick="llenar_formulario_CT('<?php echo $id?>','<?php echo $desc?>')">
+                                <i class="fas fa-reply-all fa-lg"></i>
                     </button>
                 </td>
                 <td>
-                    <button <?php echo $dtnDesabilita?> type="button" class="ventana btn btn-outline-info btn-sm activo"  id="btnModal<?php echo $varGral?><?php echo $n?>" onclick="abrirModalDatos_DP('<?php echo $id?>','<?php echo $nombre?>','<?php echo $paterno?>','<?php echo $materno?>','<?php echo $fNac?>','<?php echo $edad?>','<?php echo $correo?>','<?php echo $curp?>','<?php echo $clave?>','<?php echo $domicilio?>','<?php echo $sexo?>','<?php echo $ecivil?>')">
-                        <i class="far fa-window-maximize fa-lg"></i>
-                    </button>
-                </td>
-                <td>
-                    <button <?php echo $dtnDesabilita?> type="button" class="foto btn btn-outline-secondary btn-sm activo"  id="btnFoto<?php echo $varGral?><?php echo $n?>" onclick="abrirModalFoto('<?php echo $id?>','<?php echo $clave?>','<?php echo $nCompleto?>','<?php echo $tFoto?>')">
-                        <?php echo $icoFoto?>
-                    </button>
-                </td>
-                <td>
-                    <button <?php echo $dtnDesabilita?> type="button" class="audio btn btn-link btn-sm activo"  id="btnSonido<?php echo $varGral?><?php echo $n?>" onclick="hablar('<?php echo $sonido?>')">
-                    <i id="icoSound<?php echo $varGral?><?php echo $n?>" class="<?php echo $iconSound?>"></i>
-                    </button>
-                </td>
-                <td>
-                    <button <?php echo $dtnDesabilita?> type="button" class="horario btn btn-outline-secondary btn-sm activo"  id="btnHorario<?php echo $varGral?><?php echo $n?>" onclick="abrirModalHorario('<?php echo $id?>','<?php echo $nCompleto?>','<?php echo $vHorario?>','<?php echo $turno ?>','<?php echo $LuE ?>','<?php echo $LuS ?>','<?php echo $MaE ?>','<?php echo $MaS ?>','<?php echo $MiE ?>','<?php echo $MiS ?>','<?php echo $JuE ?>','<?php echo $JuS?>','<?php echo $ViE ?>','<?php echo $ViS ?>','<?php echo $SaE ?>','<?php echo $SaS ?>','<?php echo $DoE ?>','<?php echo $DoS ?>')">
-                        <?php echo $icoHorario?>
+                    <button <?php echo $dtnDesabilita?> type="button" class="aplicar btn btn-outline-info btn-sm activo" id="btnAplicar<?php echo $varGral?><?php echo $n?>" onclick="llenar_formulario_CT('<?php echo $id?>','<?php echo $desc?>')">
+                                <i class="fas fa-exchange-alt fa-lg"></i>
                     </button>
                 </td>
                 <td>
                     <label class="textoBase">
-                        <?php echo $clave?>
+                        <?php echo $nombre ?>
                     </label>
                 </td>
                 <td>
                     <label class="textoBase">
-                        <?php echo $nombre?>
+                        <?php echo $dias ?>
                     </label>
                 </td>
                 <td>
                     <label class="textoBase">
-                        <?php echo $paterno?>
+                        <?php echo $hora ?>
                     </label>
                 </td>
+
                 <td>
-                    <label class="textoBase">
-                        <?php echo $materno?>
-                    </label>
-                </td>
-                <td>
-                    <label class="textoBase">
-                        <?php echo $edad?>
-                    </label>
-                </td>
-                <td>
-                    <input value="<?php echo $chkValor?>" onchange="cambiar_estatus_DP(<?php echo $id?>,<?php echo $n?>)" class="toggle-two" type="checkbox" <?php echo $chkChecado?> data-toggle="toggle" data-onstyle="outline-success" data-width="60" data-size="sm" data-offstyle="outline-danger" data-on="<i class='fa fa-check'></i> Si" data-off="<i class='fa fa-times'></i> No" id="check<?php echo $n?>">
+                    <input value="<?php echo $chkValor?>" onchange="cambiar_estatus_CT(<?php echo $id?>,<?php echo $n?>)" class="toggle-two" type="checkbox" <?php echo $chkChecado?> data-toggle="toggle" data-onstyle="outline-success" data-width="60" data-size="sm" data-offstyle="outline-danger" data-on="<i class='fa fa-check'></i> Si" data-off="<i class='fa fa-times'></i> No" id="check<?php echo $n?>">
                 </td>
             </tr>
         <?php
@@ -199,16 +108,11 @@ $consultar = mysqli_query($conexionLi, $cadena);
             <tr class='hTabla'>
             <th scope="col">#</th>
                 <th scope="col">Editar</th>
-                <th scope="col">Imprimir</th>
-                <th scope="col">Datos</th>
-                <th scope="col">Foto</th>
-                <th scope="col">Audio</th>
-                <th scope="col">Horario</th>
-                <th scope="col">Clave</th>
+                <th scope="col">Exportar Tema</th>
+                <th scope="col">Aplicar Tema</th>
                 <th scope="col">Nombre</th>
-                <th scope="col">Ap. Paterno</th>
-                <th scope="col">Ap. Materno</th>
-                <th scope="col">Edad</th>
+                <th scope="col">Dias Creacion</th>
+                <th scope="col">Hora Creacion</th>
                 <th scope="col">Status</th>
             </tr>
         </tfoot>
@@ -252,20 +156,27 @@ mysqli_close($conexionLi);
                           className: 'btn btn-outline-primary btnEspacio',
                           id: 'btnNuevo',
                           action : function(){
-                            nuevo_registro_DP();
+                            nuevo_registro_CT();
                           }
                       },
                       {
                           extend: 'excel',
                           text: "<i class='far fa-file-excel fa-lg' aria-hidden='true'></i> &nbsp;Exportar a Excel",
                           className: 'btn btn-outline-secondary btnEspacio',
-                          title:'Lista_datos_personales',
+                          title:'Lista_crear_temas',
                           id: 'btnExportar',
                           exportOptions: {
                             columns:  [6,7,8,9,10],
                           }
+                        },
+                        {
+                          text: "<i class='fas fa-external-link-alt fa-lg' aria-hidden='true'></i> &nbsp;Importar Tema",
+                          className: 'btn btn-outline-success btnEspacio',
+                          id: 'btnImportar',
+                          action : function(){
+                            importar_tema_CT();
+                          }
                       }
-
             ]
         } );
     } );
