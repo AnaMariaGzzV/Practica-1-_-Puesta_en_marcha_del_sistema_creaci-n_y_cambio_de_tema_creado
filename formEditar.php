@@ -4,7 +4,7 @@ $varGral="-CT";
 ?>
 <form id="frmActualizar<?php echo $varGral?>">
 
-<input type="hidden"  id="eIdFC">
+<input type="hidden"  id="eIdCT">
 
     <div class="row">
 
@@ -55,7 +55,7 @@ $varGral="-CT";
                 </div>
                 <div class="col text-right">
                     <button  type="submit" class="btn btn-outline-success  activo btnEspacio" id="btnActualizar<?php echo $varGral?>">
-                        <i class='fa fa-bolt fa-lg'></i>
+                        <i class='fa fa-check fa-lg'></i>
                         Actualizar
                     </button>
                 </div>

@@ -16,11 +16,11 @@ function ocultarSecciones(){
     $("#guardar-EC").hide();
     $("#editar-EC").hide();
     $("#Listado-EC").hide();
-     //CREAR TEMA
-     $("#crearTema").hide();
-     $("#guardar-CT").hide();
-     $("#editar-CT").hide();
-     $("#Listado-CT").hide();
+    //CREAR TEMA
+    $("#crearTema").hide();
+    $("#guardar-CT").hide();
+    $("#editar-CT").hide();
+    $("#Listado-CT").hide();
     //USUARIOS
 }
 
@@ -69,7 +69,10 @@ function verEstadoCivil(){
     aplicarTema(idTema,'otro');      
 }
 
-function verCrearTema(){
+function verUsuarios(){
+    ocultarSecciones();
+}
+function verCrearTemas(){
     ocultarSecciones();
     $("#lblTitular").text("Crear Tema");
     
@@ -86,38 +89,31 @@ function verCrearTema(){
     aplicarTema(idTema,'otro');      
 }
 
-
-function verUsuarios(){
-    ocultarSecciones();
-}
-
 function abrirModalContra(){
     $("#modalContra").modal();
 }
 
 function validarContraseña(){
-        var contraseña = document.getElementById("nuevaContra1").value;
-        var confircontra = document.getElementById("nuevaContra2").value;
+        var contraseña = document.getElementById("nuevaContra").value;
+        var confircontra = document.getElementById("confirmarpass").value;
         if (contraseña.length > 7 && confircontra.length > 7 && contraseña==confircontra) {
-            console.log("La Contraseña es Mayor a 7 Digitos");
             $("#btnactualiza").removeAttr("disabled");
             return true;
         } else {
-            console.log("La Contraseña es Menor a 8 Digitos");
             $("#btnactualiza").attr("disabled","disabled");
             return false;
         }
     }
-    $("#nuevaContra1").keyup(function(){
+    $("#nuevaContra").keyup(function(){
         validarContraseña()
     });
-    $("#nuevaContra2").keyup(function(){
+    $("#confirmarpass").keyup(function(){
         validarContraseña()
     });
 
 // console.log("Hola");
 $("#btnactualiza").on("click",function (){
-    var contra     = $("#nuevaContra1").val();
+    var contra     = $("#nuevaContra").val();
     var id=idUsuario;
     $.ajax({
         url:"../mInicio/actualizar.php",
@@ -126,12 +122,12 @@ $("#btnactualiza").on("click",function (){
         data:{id,contra},
         success:function(respuesta){
             console.log(respuesta);
-            swal("La Contraseña se Actualizo Exitosamente!");
+            swal("Contraseña Actualizada");
             $("#modalContra").modal('hide');
             $("#contentSistema").show();
             },
             error:function(xhr,status){
-                alert("Error al Actualizar Contraseña"); 
+                alert("Error al actualizar contraseña"); 
             },
     });
 });
@@ -171,7 +167,7 @@ function aplicarTema(id,validador){
                 //alertify.success(actividad,2);
 
                 if(validador=='enlace'){
-                    accionPlay();
+                    $("#audioTema")[0].play();
                     preloader(1,"Cambiando al tema "+tema);
                     actividad  ="Ha cambiado al tema "+tema;
                     var idUser=$("#inicioIdusuario").val();
@@ -183,7 +179,6 @@ function aplicarTema(id,validador){
                     return false; 
                 }
             }
-
         },
         error:function(xhr,status){
             alert("Error en metodo AJAX"); 
@@ -527,12 +522,3 @@ $('#scroll').click(function(){
     $("html, body").animate({ scrollTop: 0 }, 600); 
     return false; 
 });
-
-//SonidoAlCambiarTema
-function accionPlay(){ 
-    var reproducir = new Audio();
-    reproducir.src= "../audios/008664321_prev.mp3";
-    reproducir.play();
- }
-
-

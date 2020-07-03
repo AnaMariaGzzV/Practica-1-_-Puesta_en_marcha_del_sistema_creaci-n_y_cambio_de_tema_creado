@@ -6,8 +6,8 @@ $varGral="-CT";
     <div class="row">
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-4">
             <div class="form-group">
-                <label for="nombre">Nombre:</label>
-                <input type="search" class="form-control" id="nombre"   autofocus required >
+                <label for="nombreTema">Nombre:</label>
+                <input type="search" class="form-control" id="nombreTema"   autofocus required >
             </div>
         </div>
         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
@@ -43,14 +43,12 @@ $varGral="-CT";
                         Cancelar
                     </button>
                 </div>
-                 
                 <div class="col text-center">
-                    <button  type="button" class="btn btn-outline-warning  activo btnEspacio" id="btnProbar<?php echo $varGral?>">
-                        <i class='fas fa-history'></i>
+                    <button  type="button" class="btn btn-outline-warning  activo btnEspacio" id="btnProbarA<?php echo $varGral?>">
+                        <i class='fas fa-history fa-lg'></i>
                         Probar
                     </button>
                 </div>
-
                 <div class="col text-right">
                     <button  type="submit" class="btn btn-outline-primary  activo btnEspacio" id="btnGuardar<?php echo $varGral?>">
                         <i class='fa fa-save fa-lg'></i>

@@ -24,7 +24,7 @@ $("#frmGuardar-CT").submit(function(e){
         setTimeout(function () {
             swal.close();
             $.ajax({
-                url:"../mCrearTema/guardar.php",
+                url:"../mCrearTemas/guardar.php",
                 type:"POST",
                 dateType:"html",
                 data:{desc},
@@ -57,11 +57,8 @@ $("#frmGuardar-CT").submit(function(e){
 
 $("#frmActualizar-CT").submit(function(e){
 
-    var id        = $("#eIdFC").val();
+    var id        = $("#eIdCT").val();
     var nombre    = $("#enombre").val();
-    var fuente    = $("#efuente").val();
-    var ebfuerte    = $("#enomenfuerte").val();
-    var eborde    = $("#eborde").val();
 
     swal({
         title: "¿Estas Seguro?",
@@ -80,10 +77,10 @@ $("#frmActualizar-CT").submit(function(e){
         setTimeout(function () {
             swal.close();
             $.ajax({
-                url:"../mCrearTema/actualizar.php",
+                url:"../mCrearTemas/actualizar.php",
                 type:"POST",
                 dateType:"html",
-                data:{id,nombrefuente,borde,bfuerte},
+                data:{id,desc},
                 success:function(respuesta){
                     console.log(respuesta);
                     llenar_lista_CT();
@@ -95,12 +92,7 @@ $("#frmActualizar-CT").submit(function(e){
                     var idUser=$("#inicioIdusuario").val();
                     log(actividad,idUser);
                     
-                    
-                    $('#enombre').focus();
-                    $('#efuente').focus();
-                    $('#ebfuerte').focus();
-                    $('#eborde').focus();
-
+                    $('#nombre').focus();
                 },
                 error:function(xhr,status){
                     alert("Error en metodo AJAX"); 
@@ -121,7 +113,7 @@ function llenar_lista_CT(){
     $("#frmGuardar-CT")[0].reset();
     $("#Listado-CT").hide();
     $.ajax({
-        url:"../mCrearTema/lista.php",
+        url:"../mCrearTemas/lista.php",
         type:"POST",
         dateType:"html",
         data:{},
@@ -144,7 +136,7 @@ function llenar_lista_CT(){
 
 function llenar_formulario_CT(id,edesc){
     console.log(id);
-    $("#eIdFC").val(id);
+    $("#eIdCT").val(id);
     $("#eDesc").val(edesc);
 
     $("#lblTitular").text(nombreModulo_EC);
@@ -153,7 +145,7 @@ function llenar_formulario_CT(id,edesc){
     $("#guardar-CT").hide();
     $("#Listado-CT").hide();
     $("#editar-CT").fadeIn();
-    $("#enombre").focus();
+    $("#eDescripcion").focus();
 }
 
 function cambiar_estatus_CT(id,consecutivo){
@@ -163,7 +155,7 @@ function cambiar_estatus_CT(id,consecutivo){
     $("#check"+consecutivo).val(contravalor);
 
     $.ajax({
-        url:"../mCrearTema/cEstatus.php",
+        url:"../mCrearTemas/cEstatus.php",
         type:"POST",
         dateType:"html",
         data:{id,contravalor},
@@ -217,4 +209,61 @@ function nuevo_registro_CT(){
     $("#nombre").focus();
     
 }
+function importarTema_CT(){
+    $("#modalImportar").modal("show");
+    
+}
+function importarArchivo(){
+    var files = $('#image2')[0].files[0];
+    var archivo=files.name;
+    var ruta= "Temas/"+archivo;
 
+    console.log(ruta);
+    
+    $.getJSON(ruta, function(data){
+        //for para decorre las propiedades
+        for(tema in data){
+
+            var nombre_tema       = data[tema].nombre_tema;
+            var color_letra       = data[tema].color_letra;
+            var color_base        = data[tema].color_base;
+            var color_base_fuerte = data[tema].color_base_fuerte;
+            var color_borde       = data[tema].color_borde;
+            var fecha_registro    = data[tema].fecha_registro;
+            var hora_registro     = data[tema].hora_registro;
+
+            $.ajax({
+                url:"../mCrearTemas/importar.php",
+                type:"POST",
+                dateType:"html",
+                data:{nombre_tema,color_letra,color_base,color_base_fuerte,color_borde,fecha_registro,hora_registro},
+                success:function(respuesta){
+                    console.log(respuesta);
+                    var bandera=respuesta;
+                    if (bandera==0) {
+                        preloader(1,"Importando Tema ...");
+                        $("#modalImportar").modal("hide");
+                        alertify.success("Tema importado Correctamente!");
+                        // combo_temas();
+                        $("#Listado-CT").fadeIn();
+                        llenar_lista_CT();
+                    }else{
+                        swal({
+                            title: "Error!",
+                            text: "Ya existe un tema con el nombre "+nombre_tema,
+                            type: "error",
+                            confirmButtonClass: "btn-dark",
+                            confirmButtonText: "Enterado"
+                        }, function (isConfirm) {
+                            alertify.message("Gracias !");
+                        });
+                    }
+                   
+                },
+                error:function(xhr,status){
+                    alert("Error en metodo AJAX"); 
+                },
+            });
+        }
+    });
+}

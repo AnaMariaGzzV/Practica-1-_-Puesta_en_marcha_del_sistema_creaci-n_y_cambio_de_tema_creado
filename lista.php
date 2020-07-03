@@ -2,19 +2,20 @@
 // Conexion mysqli
 include'../conexion/conexionli.php';
 $fecha=date("Y-m-d");
-
 //Variable de Nombre
 $varGral="-CT";
 
 $cadena = "SELECT
-        id_tema,
-        activo,
-        nombre_tema,
-        fecha_registro,
-        hora_registro,
-        TIMESTAMPDIFF(DAY,DATE_FORMAT(fecha_registro,'%Y-%m-%d'),'$fecha')
-            FROM
-                temas ORDER BY id_tema DESC";
+id_tema,
+activo,
+nombre_tema,
+fecha_registro,
+hora_registro,
+TIMESTAMPDIFF(DAY,DATE_FORMAT(fecha_registro,'%Y-%m-%d'), '$fecha') 
+FROM
+temas 
+ORDER BY
+id_tema DESC";
 $consultar = mysqli_query($conexionLi, $cadena);
 //$row = mysqli_fetch_array($consultar);
 
@@ -29,8 +30,8 @@ $consultar = mysqli_query($conexionLi, $cadena);
                 <th scope="col">Exportar Tema</th>
                 <th scope="col">Aplicar Tema</th>
                 <th scope="col">Nombre</th>
-                <th scope="col">Dias Creacion</th>
-                <th scope="col">Hora Creacion</th>
+                <th scope="col">Días desde la Creación</th>
+                <th scope="col">Hora de Creación</th>
                 <th scope="col">Status</th>
             </tr>
         </thead>
@@ -53,34 +54,34 @@ $consultar = mysqli_query($conexionLi, $cadena);
                 $chkValor      = "0";
             }
 
-            $nombre     = $row[2];
+            $nombreTema     = $row[2];
             $dias       = $row[5];
             $hora       = $row[4];
-        
-
             ?>
             <tr class="centrar">
                 <th scope="row" class="textoBase">
                     <?php echo $n?>
                 </th>
                 <td>
-                    <button <?php echo $dtnDesabilita?> type="button" class="editar btn btn-outline-success btn-sm activo" id="btnEditar<?php echo $varGral?><?php echo $n?>" onclick="llenar_formulario_CT('<?php echo $id?>','<?php echo $nombre?>')">
-                                <i class="far fa-edit fa-lg"></i>
+                    <button <?php echo $dtnDesabilita?> type="button" class="editar btn btn-outline-success btn-sm activo" id="btnEditar<?php echo $varGral?><?php echo $n?>" onclick="llenar_formulario_CT('<?php echo $id?>','<?php echo $nombreTema?>')">
+                        <i class="far fa-edit fa-lg"></i>
                     </button>
                 </td>
                 <td>
-                    <button <?php echo $dtnDesabilita?> type="button" class="exportar btn btn-outline-warning btn-sm activo" id="btnExportar<?php echo $varGral?><?php echo $n?>" onclick="llenar_formulario_CT('<?php echo $id?>','<?php echo $desc?>')">
-                                <i class="fas fa-reply-all fa-lg"></i>
+                    <button <?php echo $dtnDesabilita?> type="button" class="exportar btn btn-outline-warning btn-sm activo" id="btnExportar<?php echo $varGral?><?php echo $n?>" onclick="('<?php echo $id?>','<?php echo $desc?>')">
+                        <i class="fas fa-reply-all fa-lg"></i>
                     </button>
+                    <!-- Falta la función para exportar temas -->
                 </td>
                 <td>
-                    <button <?php echo $dtnDesabilita?> type="button" class="aplicar btn btn-outline-info btn-sm activo" id="btnAplicar<?php echo $varGral?><?php echo $n?>" onclick="llenar_formulario_CT('<?php echo $id?>','<?php echo $desc?>')">
-                                <i class="fas fa-exchange-alt fa-lg"></i>
+                    <button <?php echo $dtnDesabilita?> type="button" class="aplicar btn btn-outline-info btn-sm activo" id="btnAplicar<?php echo $varGral?><?php echo $n?>" onclick="('<?php echo $id?>','<?php echo $desc?>')">
+                        <i class="fas fa-exchange-alt fa-lg"></i>
                     </button>
+                    <!-- Falta la función para aplicar temas -->
                 </td>
                 <td>
                     <label class="textoBase">
-                        <?php echo $nombre ?>
+                        <?php echo $nombreTema ?>
                     </label>
                 </td>
                 <td>
@@ -168,15 +169,17 @@ mysqli_close($conexionLi);
                           exportOptions: {
                             columns:  [6,7,8,9,10],
                           }
-                        },
-                        {
+                      },
+                      
+                          {
                           text: "<i class='fas fa-external-link-alt fa-lg' aria-hidden='true'></i> &nbsp;Importar Tema",
                           className: 'btn btn-outline-success btnEspacio',
-                          id: 'btnImportar',
+                          id: 'btnNuevo',
                           action : function(){
-                            importar_tema_CT();
+                            importarTema_CT();
                           }
                       }
+
             ]
         } );
     } );

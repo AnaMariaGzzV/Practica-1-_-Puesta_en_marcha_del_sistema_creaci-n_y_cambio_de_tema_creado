@@ -10,7 +10,6 @@ $activo    = 1;
 $fecha=date("Y-m-d"); 
 $hora=date ("H:i:s");
 
-//Inserto registro en tabla pacientes 
 $cadena = "INSERT INTO ecivil
 				(descripcion,
 				activo,
